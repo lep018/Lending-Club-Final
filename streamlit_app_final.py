@@ -116,12 +116,12 @@ st.header("Borrower Information")
 col1, col2 = st.columns(2)
 
 with col1:
-    loan_amnt = st.number_input("Loan Amount ($")", min_value=500, max_value=40000, value=10000, step=500)
+    loan_amnt = st.number_input("Loan Amount ($", min_value=500, max_value=40000, value=10000, step=500)
     int_rate = st.number_input("Interest Rate (%)", min_value=0.1, max_value=30.0, value=9.9, step=0.1, format="%.1f")
     fico_avg = st.number_input("FICO Score (Average)", min_value=300, max_value=850, value=675, step=1)
     dti = st.number_input("Debt-to-Income Ratio (DTI)", min_value=0.0, max_value=50.0, value=15.0, step=0.1, format="%.1f")
     revol_util = st.number_input("Revolving Line Utilization (%)", min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f")
-    annual_inc = st.number_input("Annual Income ($")", min_value=10000, max_value=1000000, value=70000, step=1000)
+    annual_inc = st.number_input("Annual Income ($", min_value=10000, max_value=1000000, value=70000, step=1000)
 
 with col2:
     credit_age = st.number_input("Credit History Length (Years)", min_value=0.1, max_value=60.0, value=10.0, step=0.1, format="%.1f")
