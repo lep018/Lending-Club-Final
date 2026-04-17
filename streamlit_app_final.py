@@ -1,7 +1,13 @@
+import pickle
+
+# Define paths for the models and scaler (adjust if needed)
+LOGREG_MODEL_PATH = 'logistic_regression_model.pkl'
+LASSO_MODEL_PATH = 'lassocv_regressor_model.pkl'
+SCALER_PATH = 'scaler_reduced.pkl' # Assuming you've saved the scaler as well
+
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pickle
 
 # --- Bucknell Themed Styling ---
 # Official Bucknell University Colors
@@ -61,16 +67,20 @@ h1, h2, h3, h4, h5, h6 {{
 # --- Load Models and Scaler ---
 @st.cache_resource # Cache the models to avoid reloading on each rerun
 def load_models():
+    """Loads the pre-trained models and scaler."""
     try:
-        with open('logistic_regression_model.pkl', 'rb') as f:
+        with open(LOGREG_MODEL_PATH, 'rb') as f:
             logreg_model = pickle.load(f)
-        with open('lassocv_regressor_model.pkl', 'rb') as f:
+        with open(LASSO_MODEL_PATH, 'rb') as f:
             lasso_model = pickle.load(f)
-        with open('scaler_reduced.pkl', 'rb') as f:
+        with open(SCALER_PATH, 'rb') as f:
             scaler = pickle.load(f)
         return logreg_model, lasso_model, scaler
     except FileNotFoundError:
-        st.error("Error: Model or scaler files not found. Make sure 'logistic_regression_model.pkl', 'lassocv_regressor_model.pkl', and 'scaler_reduced.pkl' are in the same directory.")
+        st.error(f"Error: Model or scaler file not found. Please ensure {LOGREG_MODEL_PATH}, {LASSO_MODEL_PATH}, and {SCALER_PATH} are in the same directory as the app.")
+        st.stop()
+    except Exception as e:
+        st.error(f"An error occurred while loading models: {e}")
         st.stop()
 
 logreg_model, lasso_model, scaler = load_models()
