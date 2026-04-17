@@ -228,11 +228,16 @@ if st.button("Analyze Loan Application"):
 
     st.markdown("---")
     st.subheader("Prediction Breakdown (Probabilities)")
-    probabilities_df = pd.DataFrame({
-        'Probability': [p_fully_paid, p_not_fully_paid]
-    }, index=['Fully Paid', 'Not Fully Paid'])
+    # Reconstruct DataFrame to explicitly include category and color for st.bar_chart
+    probabilities_data = {
+        'Category': ['Fully Paid', 'Not Fully Paid'],
+        'Probability': [p_fully_paid, p_not_fully_paid],
+        'Color': [bucknell_orange, bucknell_navy]
+    }
+    probabilities_df = pd.DataFrame(probabilities_data)
 
-    st.bar_chart(probabilities_df, color=[bucknell_orange, bucknell_navy]) # Using Bucknell colors for the chart
+    # Plot using x, y, and color arguments referencing DataFrame columns
+    st.bar_chart(probabilities_df, x='Category', y='Probability', color='Color')
 
 st.markdown("---")
 st.markdown("**Developed by Laura Posh and Scarlet Kashuba** | Powered by Streamlit")
