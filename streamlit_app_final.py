@@ -213,11 +213,11 @@ if st.button("Analyze Loan Application"):
     st.header("Prediction Results")
 
     st.markdown(
-        f"**Propensity that the borrower's loan will be 'Fully Paid':** <span style='color:{bucknell_navy}'>{p_fully_paid:.2%}</span>",
+        f"**Propensity that the borrower's loan will be fully paid:** <span style='color:{bucknell_navy}'>{p_fully_paid:.2%}</span>",
         unsafe_allow_html=True
     )
     st.markdown(
-        f"**Predicted Pessimistic Annualized Return (ret_PESS):** <span style='color:{bucknell_navy}'>{predicted_ret_PESS:.2f}%</span>",
+        f"**Predicted Pessimistic Annualized Return:** <span style='color:{bucknell_navy}'>{predicted_ret_PESS:.2f}%</span>",
         unsafe_allow_html=True
     )
     st.markdown(
