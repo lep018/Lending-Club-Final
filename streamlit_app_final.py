@@ -105,7 +105,7 @@ st.markdown("""
 Welcome to the Bucknell Lending Club Loan Risk Assessment tool.
 This application leverages machine learning models to help evaluate potential loan applications by predicting:
 1.  **Propensity that the borrower's loan will be 'Fully Paid'**: The likelihood that a borrower will repay their loan in full.
-2.  **Predicted Pessimistic Annualized Return (ret_PESS)**: An estimate of the annualized return under a pessimistic scenario, given all features.
+2.  **Predicted Pessimistic Annualized Return**: An estimate of the annualized return under a pessimistic scenario, given all features.
 3.  **Expected Pessimistic Annualized Return**: A probability-weighted estimate of the return, combining repayment probability with historical average returns for paid and defaulted loans.
 4.  **Recommended Action**: A clear 'Approve' or 'Reject' decision based on the model's insights.
 """)
