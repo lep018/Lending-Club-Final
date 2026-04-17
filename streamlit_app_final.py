@@ -1,12 +1,3 @@
-import pickle
-
-# Define file path for saving the scaler
-scaler_path = 'scaler_reduced.pkl'
-
-# Save the retrained StandardScaler
-with open(scaler_path, 'wb') as file:
-    pickle.dump(scaler_reduced, file)
-print(f"Scaler saved to {scaler_path}")
 import streamlit as st
 import pandas as pd
 import numpy as np
