@@ -91,9 +91,6 @@ avg_return_fully_paid = 4.612149501658192
 avg_return_not_fully_paid = -12.537793299762876
 custom_cutoff_logreg = 0.55 # from the notebook analysis for best classifier
 
-# Thresholds for the recommendation logic
-DECLINE_RETURN_THRESHOLD = -2.0 # If expected return is below this, decline
-
 # The 15 features used for retraining (maintain specific order)
 combined_15_features = [
     'credit_age', 'int_rate', 'verification_status_Source Verified', 'term_num',
@@ -103,7 +100,6 @@ combined_15_features = [
 
 # --- Streamlit UI: Title and Introduction ---
 st.title("💰 Bucknell Lending Club: Loan Risk Assessment")
-st.markdown("Enter borrower information below to estimate repayment likelihood, expected pessimistic return, and a recommended lending action.")
 st.markdown("---")
 st.markdown("""
 Welcome to the Bucknell Lending Club Loan Risk Assessment tool.
@@ -111,7 +107,7 @@ This application leverages machine learning models to help evaluate potential lo
 1.  **Propensity that the borrower's loan will be 'Fully Paid'**: The likelihood that a borrower will repay their loan in full.
 2.  **Predicted Pessimistic Annualized Return (ret_PESS)**: An estimate of the annualized return under a pessimistic scenario, given all features.
 3.  **Expected Pessimistic Annualized Return**: A probability-weighted estimate of the return, combining repayment probability with historical average returns for paid and defaulted loans.
-4.  **Recommended Action**: A clear 'Approve' or 'Decline' decision based on the model's insights.
+4.  **Recommended Action**: A clear 'Approve' or 'Reject' decision based on the model's insights.
 """)
 st.markdown("---")
 
@@ -121,14 +117,14 @@ st.header("Borrower Information")
 col1, col2 = st.columns(2)
 
 with col1:
-    loan_amnt = st.number_input("Loan Amount ($, min_value=500, max_value=40000, value=10000, step=500)
-    annual_inc = st.number_input("Annual Income ($, min_value=10000, max_value=1000000, value=70000, step=1000)
-    int_rate = st.number_input("Interest Rate (%, min_value=0.1, max_value=30.0, value=9.9, step=0.1, format="%.1f")
+    loan_amnt = st.number_input("Loan Amount ($", min_value=500, max_value=40000, value=10000, step=500)
+    int_rate = st.number_input("Interest Rate (%)", min_value=0.1, max_value=30.0, value=9.9, step=0.1, format="%.1f")
     fico_avg = st.number_input("FICO Score (Average)", min_value=300, max_value=850, value=675, step=1)
-
-with col2:
     dti = st.number_input("Debt-to-Income Ratio (DTI)", min_value=0.0, max_value=50.0, value=15.0, step=0.1, format="%.1f")
     revol_util = st.number_input("Revolving Line Utilization (%)", min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f")
+    annual_inc = st.number_input("Annual Income ($", min_value=10000, max_value=1000000, value=70000, step=1000)
+
+with col2:
     credit_age = st.number_input("Credit History Length (Years)", min_value=0.1, max_value=60.0, value=10.0, step=0.1, format="%.1f")
     term_num_option = st.selectbox("Loan Term (Months)", options=[36, 60], index=0)
 
@@ -149,6 +145,7 @@ with col2:
         options=['Verified', 'Source Verified', 'Not Verified'],
         index=1 # Default to Source Verified
     )
+
 
 st.markdown("---")
 
@@ -216,15 +213,15 @@ if st.button("Analyze Loan Application"):
     st.header("Prediction Results")
 
     st.markdown(
-        f"**Probability Loan Will Be Fully Paid:** <span style='color:{bucknell_navy}'>{p_fully_paid:.2%}</span>",
+        f"**Propensity that the borrower's loan will be 'Fully Paid':** <span style='color:{bucknell_navy}'>{p_fully_paid:.2%}</span>",
         unsafe_allow_html=True
     )
     st.markdown(
-        f"**Predicted Pessimistic Return:** <span style='color:{bucknell_navy}'>{predicted_ret_PESS:.2f}%</span>",
+        f"**Predicted Pessimistic Annualized Return (ret_PESS):** <span style='color:{bucknell_navy}'>{predicted_ret_PESS:.2f}%</span>",
         unsafe_allow_html=True
     )
     st.markdown(
-        f"**Expected Pessimistic Return:** <span style='color:{bucknell_navy}'>{expected_ret_PESS:.2f}%</span>",
+        f"**Expected Pessimistic Annualized Return:** <span style='color:{bucknell_navy}'>{expected_ret_PESS:.2f}%</span>",
         unsafe_allow_html=True
     )
 
@@ -232,24 +229,24 @@ if st.button("Analyze Loan Application"):
     st.header("Recommended Action")
 
     if p_fully_paid >= custom_cutoff_logreg and expected_ret_PESS > 0:
-        st.success(f"**Recommendation: Approve Loan**")
-        st.info("Strong repayment likelihood and positive expected return.")
-    elif expected_ret_PESS <= DECLINE_RETURN_THRESHOLD:
-        st.error(f"**Recommendation: Decline Loan**")
-        st.info("Lower repayment likelihood or significantly negative expected return.")
+        st.success(f"**Recommendation: APPROVE LOAN**")
+        st.info("Based on the models, this loan has a high likelihood of being fully paid and a positive expected return. Proceed with caution and further due diligence.")
     else:
-        st.warning(f"**Recommendation: Review Manually**")
-        st.info("Borderline repayment risk or mixed return signal. Further due diligence is recommended.")
+        st.error(f"**Recommendation: REJECT LOAN**")
+        st.info("Based on the models, this loan has a lower likelihood of being fully paid or a negative expected return, indicating higher risk. Consider rejecting or requiring more stringent conditions.")
 
     st.markdown("---")
     st.subheader("Prediction Breakdown (Probabilities)")
+    # Reconstruct DataFrame to explicitly include category and color for st.bar_chart
+    probabilities_data = {
+        'Category': ['Fully Paid', 'Not Fully Paid'],
+        'Probability': [p_fully_paid, p_not_fully_paid],
+        'Color': [bucknell_orange, bucknell_navy]
+    }
+    probabilities_df = pd.DataFrame(probabilities_data)
 
-    probabilities_df = pd.DataFrame(
-        {'Probability': [p_fully_paid, p_not_fully_paid]},
-        index=['Fully Paid', 'Not Fully Paid']
-    )
-
-    st.bar_chart(probabilities_df)
+    # Plot using x, y, and color arguments referencing DataFrame columns
+    st.bar_chart(probabilities_df, x='Category', y='Probability', color='Color')
 
 st.markdown("---")
 st.markdown("**Developed by Laura Posh and Scarlet Kashuba** | Powered by Streamlit")
