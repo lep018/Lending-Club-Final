@@ -1,5 +1,3 @@
-pip install scikit-learn
-
 import pickle
 
 # Define paths for the models and scaler (adjust if needed)
