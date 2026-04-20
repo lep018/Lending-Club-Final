@@ -94,17 +94,58 @@ combined_15_features = [
     'revol_util', 'grade_B', 'log_annual_inc', 'grade_D', 'grade_C', 'grade_E', 'dti'
 ]
 
-# --- Title ---
-st.title("📊 Bucknell Lending Club: Loan Approval & Return Forecasting")
-st.markdown("---")
+# =========================================================
+# 🔷 REPLACED TOP SECTION (REDESIGNED HERO HEADER)
+# =========================================================
 
-st.markdown("""
-This tool evaluates loan applications using machine learning to predict:
-- **Probability the loan will be fully paid**
-- **Predicted pessimistic return**
-- **Expected pessimistic return**
-- **Recommended approval decision**
-""")
+st.markdown(f"""
+<div style="background-color: {bucknell_navy}; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
+    <h1 style="color: white; margin-bottom: 5px;">
+        Loan Decision & Return Forecasting Dashboard
+    </h1>
+    <h4 style="color: #d3d3d3; margin-top: 0;">
+        Built for Bucknell Lending Club
+    </h4>
+    <p style="color: white; font-size: 16px; margin-top: 15px;">
+        A data-driven decision support tool that evaluates loan applications using machine learning to estimate risk, return, and repayment probability.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# Feature highlight cards
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f"""
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+        <h5 style="color:{bucknell_navy}; margin-bottom:5px;">Repayment Probability</h5>
+        <p style="font-size: 13px; margin:0;">Likelihood loan is fully paid</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+        <h5 style="color:{bucknell_navy}; margin-bottom:5px;">Predicted Return</h5>
+        <p style="font-size: 13px; margin:0;">Pessimistic annualized return</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+        <h5 style="color:{bucknell_navy}; margin-bottom:5px;">Expected Return</h5>
+        <p style="font-size: 13px; margin:0;">Risk-adjusted return estimate</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    st.markdown(f"""
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
+        <h5 style="color:{bucknell_navy}; margin-bottom:5px;">Decision Output</h5>
+        <p style="font-size: 13px; margin:0;">Approve or reject recommendation</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -214,3 +255,5 @@ if st.button("Analyze Loan Application"):
 
 st.markdown("---")
 st.markdown("Developed by Laura Posh and Scarlet Kashuba")
+
+
