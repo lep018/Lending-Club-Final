@@ -45,6 +45,12 @@ h1, h2, h3, h4, h5, h6 {{
     font-size: 1rem;
     border: 1px solid {bucknell_orange};
 }}
+/* ✅ FIXED HOVER COLOR */
+.stButton>button:hover {{
+    background-color: {bucknell_navy};
+    color: white;
+    border: 1px solid {bucknell_navy};
+}}
 .stAlert {{
     border-radius: 5px;
 }}
@@ -255,5 +261,3 @@ if st.button("Analyze Loan Application"):
 
 st.markdown("---")
 st.markdown("Developed by Laura Posh and Scarlet Kashuba")
-
-
