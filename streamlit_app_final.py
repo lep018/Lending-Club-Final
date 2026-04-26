@@ -45,7 +45,6 @@ h1, h2, h3, h4, h5, h6 {{
     font-size: 1rem;
     border: 1px solid {bucknell_orange};
 }}
-/* ✅ FIXED HOVER COLOR */
 .stButton>button:hover {{
     background-color: {bucknell_navy};
     color: white;
@@ -101,7 +100,7 @@ combined_15_features = [
 ]
 
 # =========================================================
-# 🔷 REPLACED TOP SECTION (REDESIGNED HERO HEADER)
+# 🔷 HERO HEADER
 # =========================================================
 
 st.markdown(f"""
@@ -118,8 +117,8 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Feature highlight cards
-col1, col2, col3, col4 = st.columns(4)
+# Feature highlight cards (UPDATED - removed Expected Return)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown(f"""
@@ -138,14 +137,6 @@ with col2:
     """, unsafe_allow_html=True)
 
 with col3:
-    st.markdown(f"""
-    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
-        <h5 style="color:{bucknell_navy}; margin-bottom:5px;">Expected Return</h5>
-        <p style="font-size: 13px; margin:0;">Risk-adjusted return estimate</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col4:
     st.markdown(f"""
     <div style="background-color: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center;">
         <h5 style="color:{bucknell_navy}; margin-bottom:5px;">Decision Output</h5>
@@ -216,12 +207,11 @@ if st.button("Analyze Loan Application"):
     # Predictions
     p_fully_paid = logreg_model.predict_proba(scaled_input_df)[:, 1][0]
     predicted_ret = lasso_model.predict(scaled_input_df)[0]
-    expected_ret = (p_fully_paid * avg_return_fully_paid) + ((1 - p_fully_paid) * avg_return_not_fully_paid)
 
     # --- Results Display ---
     st.header("Loan Decision Insights")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         st.markdown(f"""
@@ -239,25 +229,17 @@ if st.button("Analyze Loan Application"):
         </div>
         """, unsafe_allow_html=True)
 
-    with col3:
-        st.markdown(f"""
-        <div style='text-align:center;'>
-            <h4>Expected Pessimistic Return</h4>
-            <h1 style='color:{bucknell_orange}; font-size:48px;'>{expected_ret:.2f}%</h1>
-        </div>
-        """, unsafe_allow_html=True)
-
     st.markdown("---")
 
     # --- Recommendation ---
     st.header("Recommended Action")
 
-    if p_fully_paid >= custom_cutoff_logreg and expected_ret > 0:
+    if p_fully_paid >= custom_cutoff_logreg:
         st.success("**APPROVE LOAN**")
-        st.info("High probability of repayment and positive expected return.")
+        st.info("High probability of repayment.")
     else:
         st.error("**REJECT LOAN**")
-        st.info("Lower repayment likelihood or negative expected return.")
+        st.info("Lower repayment likelihood.")
 
 st.markdown("---")
 st.markdown("Developed by Laura Posh and Scarlet Kashuba")
